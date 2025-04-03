@@ -14,7 +14,9 @@ class ViewDietsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Dietas de $petName',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
         ),
         backgroundColor: Color.fromARGB(197, 233, 189, 148),
         elevation: 4,

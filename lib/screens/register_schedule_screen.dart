@@ -27,34 +27,32 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
     _selectedLabel = '';
   }
 
-  // Función para agregar horario a Firestore y programar la notificación
   void _addSchedule() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
 
       try {
-        // Convertir la fecha y hora a Timestamp
         DateTime parsedDate = DateTime.parse(_selectedDate);
-        DateTime parsedTime = DateTime.parse(
-          "2022-01-01 " + _selectedTime,
-        ); // Sólo para manejar la hora
+        List<String> timeParts = _selectedTime.split(":");
+        TimeOfDay timeOfDay = TimeOfDay(
+          hour: int.parse(timeParts[0]),
+          minute: int.parse(timeParts[1]),
+        );
+
         DateTime scheduleDateTime = DateTime(
           parsedDate.year,
           parsedDate.month,
           parsedDate.day,
-          parsedTime.hour,
-          parsedTime.minute,
+          timeOfDay.hour,
+          timeOfDay.minute,
         );
 
-        // Crear un objeto Schedule
         Schedule newSchedule = Schedule(
-          date: Timestamp.fromDate(parsedDate),
-          time: Timestamp.fromDate(parsedTime),
+          dateTime: Timestamp.fromDate(scheduleDateTime),
           label: _selectedLabel,
           userID: FirebaseAuth.instance.currentUser?.uid ?? '',
         );
 
-        // Llamar al servicio para agregar el horario y programar la notificación
         await _scheduleService.addSchedule(newSchedule);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +66,6 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
     }
   }
 
-  // Función para mostrar el DatePicker y actualizar la fecha
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -76,14 +73,13 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != DateTime.now()) {
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked.toIso8601String().split('T')[0]; // "yyyy-mm-dd"
+        _selectedDate = picked.toIso8601String().split('T')[0];
       });
     }
   }
 
-  // Función para mostrar el TimePicker y actualizar la hora
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -91,7 +87,7 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
     );
     if (picked != null) {
       setState(() {
-        _selectedTime = picked.format(context);
+        _selectedTime = "${picked.hour}:${picked.minute}";
       });
     }
   }
@@ -100,23 +96,25 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registrar Horarios del Dispensador"),
-        backgroundColor: const Color(0xFF81C784), // Color verde
+        title: const Text(
+          "Registrar Horarios del Dispensador",
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
+        ),
+        backgroundColor: const Color(0xFF81C784),
         centerTitle: true,
-        elevation: 6, // Sombra suave
+        elevation: 6,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
-          // Permite desplazarse en la pantalla
           child: Column(
             children: [
-              // Formulario para ingresar la fecha, hora y etiqueta
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Campo de fecha con DatePicker
                     GestureDetector(
                       onTap: () => _selectDate(context),
                       child: AbsorbPointer(
@@ -138,7 +136,6 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Campo de hora con TimePicker
                     GestureDetector(
                       onTap: () => _selectTime(context),
                       child: AbsorbPointer(
@@ -160,7 +157,6 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Campo de etiqueta (Dropdown)
                     DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         labelText: 'Etiqueta (Desayuno, Comida, Cena, etc.)',
@@ -185,7 +181,6 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
                           }).toList(),
                     ),
                     const SizedBox(height: 16),
-                    // Botón de agregar horario con animación
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       width: double.infinity,
@@ -193,7 +188,7 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
                         onPressed: _addSchedule,
                         child: const Text('Agregar Horario'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4CAF50), // Verde
+                          backgroundColor: const Color(0xFF4CAF50),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 30,
                             vertical: 12,
@@ -201,7 +196,7 @@ class _RegisterScheduleScreenState extends State<RegisterScheduleScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          elevation: 5, // Sombra
+                          elevation: 5,
                         ),
                       ),
                     ),

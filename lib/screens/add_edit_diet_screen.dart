@@ -80,9 +80,13 @@ class _AddEditDietScreenState extends State<AddEditDietScreen> {
           });
         }
 
+        // Mostrar SnackBar con mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Dieta guardada correctamente')),
         );
+
+        // Regresar a la página anterior
+        Navigator.pop(context);
       } catch (e) {
         print("Error al guardar dieta: $e");
       }
@@ -189,7 +193,7 @@ class _AddEditDietScreenState extends State<AddEditDietScreen> {
               TextFormField(
                 controller: _quantityController,
                 decoration: const InputDecoration(
-                  labelText: 'Cantidad (gramos)',
+                  labelText: 'Cantidad (gramos por comida)',
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {

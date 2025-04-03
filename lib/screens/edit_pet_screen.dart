@@ -117,7 +117,9 @@ class _EditPetScreenState extends State<EditPetScreen> {
       appBar: AppBar(
         title: const Text(
           'Editar Mascota',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
         ),
         backgroundColor: Color.fromARGB(197, 233, 189, 148),
         centerTitle: true,

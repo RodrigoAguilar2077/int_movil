@@ -10,7 +10,9 @@ class DispenserStatusScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Estado del Dispensador',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
         ),
         backgroundColor: const Color.fromARGB(197, 233, 189, 148),
         elevation: 0,

@@ -64,7 +64,10 @@ class _RegisterDietScreenState extends State<RegisterDietScreen> {
                 actions: [
                   CupertinoDialogAction(
                     child: const Text('OK'),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pop(context); // Cerrar el dialog
+                      Navigator.pop(context); // Volver a la pantalla anterior
+                    },
                   ),
                 ],
               ),
@@ -120,7 +123,10 @@ class _RegisterDietScreenState extends State<RegisterDietScreen> {
               ),
               _buildTextField(_typeController, 'Tipo de comida'),
               _buildTextField(_brandController, 'Marca de la comida'),
-              _buildTextField(_quantityController, 'Cantidad (gramos)'),
+              _buildTextField(
+                _quantityController,
+                'Cantidad (gramos por comida)',
+              ),
               _buildTextField(
                 _restrictionsController,
                 'Restricciones alimenticias',

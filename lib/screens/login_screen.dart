@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,7 +41,12 @@ class _LoginScreenState extends State<LoginScreen> {
       print("Error al iniciar sesión: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al iniciar sesión')),
+          SnackBar(
+            content: Text(
+              'Error al iniciar sesión',
+              style: GoogleFonts.fjallaOne(),
+            ),
+          ),
         );
       }
     }
@@ -53,39 +59,46 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // 🔹 Fondo con imagen y filtro oscuro
           Positioned.fill(
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(0.5),
                 BlendMode.darken,
               ),
-              child: Image.asset(
-                'assets/images/fondo_login2.png',
-                fit: BoxFit.cover,
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationX(0), // Asegura que no se voltee
+                child: Image.asset(
+                  'assets/images/login_final.png',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter, // Evita inversiones
+                ),
               ),
             ),
           ),
 
-          // 🔹 Contenido centrado
           Center(
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "AUTOPET UTT",
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.fjallaOne(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w500,
                       color: Colors.white,
-                      letterSpacing: 1.5,
+                      letterSpacing: 2.0,
                     ),
                   ),
+
                   const SizedBox(height: 15),
-                  const Text(
+                  Text(
                     "Inicia sesión con Google para continuar",
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                    style: GoogleFonts.fjallaOne(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
@@ -113,9 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Image.asset('assets/google_logo.png', height: 24),
                               const SizedBox(width: 10),
-                              const Text(
+                              Text(
                                 "Continuar con Google",
-                                style: TextStyle(
+                                style: GoogleFonts.fjallaOne(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -129,15 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          // 🔹 Pie de página con "FutureTech - Derechos reservados"
           Positioned(
             bottom: 20,
             left: 0,
             right: 0,
-            child: const Text(
+            child: Text(
               "FutureTech - Todos los derechos reservados",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white54, fontSize: 12),
+              style: GoogleFonts.fjallaOne(color: Colors.white54, fontSize: 12),
             ),
           ),
         ],

@@ -5,6 +5,7 @@ import 'perfil_screen.dart';
 import 'register_schedule_screen.dart';
 import 'calendar_screen.dart';
 import 'settings_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -39,7 +40,6 @@ class _MenuScreenState extends State<MenuScreen> {
     HomeScreen(),
     PerfilScreen(),
     RegisterScheduleScreen(),
-    CalendarScreen(),
     AjustesScreen(),
   ];
 
@@ -53,10 +53,16 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("AUTOPET UTT"),
+        title: const Text(
+          "AUTOPET UTT",
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
+        ),
         backgroundColor: const Color.fromARGB(255, 248, 238, 225),
         centerTitle: true,
       ),
+
       body: Container(
         color: Colors.grey[900], // Color de fondo gris oscuro
         child: IndexedStack(index: _selectedIndex, children: _screens),
@@ -135,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _menuButton(
                   context,
-                  'Estado del Dispensador',
+                  'Dispensador',
                   Icons.percent,
                   Colors.red,
                   '/estadoDispensador',
@@ -156,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 _menuButton(
                   context,
-                  'Registrar Mascota',
+                  'Registrar',
                   Icons.add_circle_outline,
                   Colors.blue,
                   '/register_pet',
@@ -214,6 +220,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           "No nos hacemos responsables de cualquier daño directo o indirecto derivado del uso de nuestra aplicación.\n\n"
                           "6. Contacto\n"
                           "Si tienes preguntas sobre estos términos, puedes contactarnos a través de futetch2026@gmail.com.",
+                          style: TextStyle(
+                            fontFamily:
+                                'Fjalla One', // Aquí se aplica la fuente
+                            fontSize: 16, // Tamaño de fuente
+                            fontWeight: FontWeight.normal, // Peso de la fuente
+                          ),
                         ),
                       ),
                       actions: [
@@ -343,43 +355,26 @@ class RecentInteractions extends StatelessWidget {
       "details": "Nivel de agua: 90%",
     },
     {
-      "time": "Ayer, 12:00 PM",
-      "event": "Comida dispensada",
-      "details": "60g dispensados",
+      "time": "Hace 2 días, 9:15 AM",
+      "event": "Medicación administrada",
+      "details": "Antibiótico recetado",
     },
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Últimas Interacciones",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 10),
-          ...interactions.map(
-            (interaction) => Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
+    return Column(
+      children:
+          interactions.map((interaction) {
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: ListTile(
-                leading: Icon(Icons.history, color: Colors.blueAccent),
                 title: Text(interaction["event"] ?? ""),
-                subtitle: Text(
-                  "${interaction["time"]}\n${interaction["details"]}",
-                ),
-                isThreeLine: true,
+                subtitle: Text(interaction["details"] ?? ""),
+                trailing: Text(interaction["time"] ?? ""),
               ),
-            ),
-          ),
-        ],
-      ),
+            );
+          }).toList(),
     );
   }
 }

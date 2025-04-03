@@ -159,7 +159,12 @@ class _RegistrarMascotaScreenState extends State<RegistrarMascotaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registrar Mascota 🐾"),
+        title: const Text(
+          "Registrar Mascota 🐾",
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
+        ),
         backgroundColor: Color.fromARGB(197, 233, 189, 148),
       ),
       body: Container(
@@ -177,7 +182,7 @@ class _RegistrarMascotaScreenState extends State<RegistrarMascotaScreen> {
               _buildTextField("Raza", _razaController),
               _buildTextField("Estado de Salud", _saludController),
               _buildDropdownField("Sexo", ["Macho", "Hembra"]),
-              const SizedBox(height: 20),
+              const SizedBox(height: 55),
               ElevatedButton(
                 onPressed: _registrarMascota,
                 child: const Text("Registrar"),

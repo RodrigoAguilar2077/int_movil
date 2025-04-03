@@ -35,9 +35,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       final events = <DateTime, List<Map<String, String>>>{};
       for (var doc in snapshot.docs) {
-        Timestamp dateTimestamp = doc['date'];
-        DateTime eventDate = dateTimestamp.toDate();
+        Timestamp dateTimeTimestamp =
+            doc['dateTime']; // Obtener el campo combinado de fecha y hora
+        DateTime eventDate = dateTimeTimestamp.toDate();
 
+        // Limpiar la fecha para comparaciones (solo año, mes y día)
         DateTime cleanedEventDate = DateTime(
           eventDate.year,
           eventDate.month,
@@ -45,7 +47,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         );
 
         String label = doc['label'];
-        String time = doc['time']; // Obtener horario específico del evento
+        String time =
+            "${eventDate.hour}:${eventDate.minute}"; // Obtener horario específico del evento
 
         if (events[cleanedEventDate] == null) {
           events[cleanedEventDate] = [];
@@ -82,7 +85,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Calendario de Horarios"),
+        title: const Text(
+          "Calendario de Horarios",
+          style: TextStyle(
+            fontFamily: 'Fjalla One', // Aquí se aplica la fuente
+          ),
+        ),
+
         backgroundColor: const Color.fromARGB(197, 233, 189, 105),
       ),
       body: Container(
