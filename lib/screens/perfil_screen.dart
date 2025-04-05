@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:int_movil/theme_provider.dart';
 
 class PerfilScreen extends StatelessWidget {
   const PerfilScreen({super.key});
@@ -7,9 +9,19 @@ class PerfilScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF7F2), // Fondo suave color crema
+      backgroundColor:
+          themeProvider.isDarkMode ? Colors.black87 : const Color(0xFFFAF7F2),
+      appBar: AppBar(
+        title: const Text('Perfil'),
+        backgroundColor:
+            themeProvider.isDarkMode
+                ? Colors.grey[900]
+                : const Color(0xFFE74C3C),
+        elevation: 0,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -33,17 +45,18 @@ class PerfilScreen extends StatelessWidget {
                         : null,
                 backgroundColor: const Color(
                   0xFF4CAF50,
-                ), // Color de fondo verde si no hay foto
+                ), // Fondo verde si no hay foto
               ),
               const SizedBox(height: 20),
 
               // 🔹 Nombre de usuario
               Text(
                 user?.displayName ?? 'Usuario sin nombre',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color:
+                      themeProvider.isDarkMode ? Colors.white : Colors.black87,
                 ),
               ),
               const SizedBox(height: 8),
@@ -51,7 +64,11 @@ class PerfilScreen extends StatelessWidget {
               // 🔹 Correo electrónico
               Text(
                 user?.email ?? 'Correo no disponible',
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color:
+                      themeProvider.isDarkMode ? Colors.white70 : Colors.grey,
+                ),
               ),
               const SizedBox(height: 30),
 

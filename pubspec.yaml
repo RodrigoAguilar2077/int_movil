@@ -27,7 +27,7 @@ dependencies:
   
 
   # Manejo de estado
-  provider: ^6.1.2
+  provider: ^6.1.4
 
   # Otras utilidades
   table_calendar: ^3.0.9
@@ -38,6 +38,7 @@ dependencies:
   flutter_pdfview: ^1.4.0
   flutter_downloader: ^1.12.0
   path_provider: ^2.1.5
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

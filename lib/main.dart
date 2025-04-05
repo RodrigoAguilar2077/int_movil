@@ -16,13 +16,21 @@ import 'package:flutter_pdfview/flutter_pdfview.dart'; // Descomentado
 import 'dart:async';
 import 'dart:typed_data'; // Para manejar los bytes del archivo PDF
 import 'package:flutter/services.dart'; // Para cargar el archivo desde los assets
-import 'package:path_provider/path_provider.dart'; // Para manejar el directorio local
+import 'package:path_provider/path_provider.dart';
+import 'theme_provider.dart';
+import 'package:provider/provider.dart'; // Este es el import necesario para ChangeNotifierProvider
+// Para manejar el directorio local
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Inicializa Firebase antes de correr la app
 
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -36,6 +44,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'AutoPet UTT',
       debugShowCheckedModeBanner: false,
+      theme: Provider.of<ThemeProvider>(context).currentTheme,
       initialRoute: '/login', // Comienza desde la pantalla de login
       routes: {
         '/login': (context) => const LoginScreen(),

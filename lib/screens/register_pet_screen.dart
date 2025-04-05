@@ -173,8 +173,9 @@ class _RegistrarMascotaScreenState extends State<RegistrarMascotaScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 40),
               _buildImagePicker(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               _buildTextField("Nombre", _nombreController),
               _buildTextField("Edad (años)", _edadController, isNumeric: true),
               _buildTextField("Peso (kg)", _pesoController, isNumeric: true),

@@ -3,51 +3,112 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pdf_viewer_screen.dart';
 
-class AjustesScreen extends StatelessWidget {
+class AjustesScreen extends StatefulWidget {
   const AjustesScreen({super.key});
 
   @override
+  _AjustesScreenState createState() => _AjustesScreenState();
+}
+
+class _AjustesScreenState extends State<AjustesScreen> {
+  bool _isDarkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
+
+  void _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    });
+  }
+
+  void _saveThemePreference(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isDarkMode', value);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Configuración",
-          style: TextStyle(fontFamily: 'Fjalla One'),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: _isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Configuración",
+            style: TextStyle(fontFamily: 'Fjalla One'),
+          ),
+          backgroundColor: const Color.fromARGB(197, 233, 189, 148),
         ),
-        backgroundColor: const Color(0xFF4CAF50),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Ajustes de la aplicación",
-              style: TextStyle(
-                fontFamily: 'Fjalla One',
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Ajustes de la aplicación",
+                style: TextStyle(
+                  fontFamily: 'Fjalla One',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _OpcionSwitch(
-              icono: Icons.notifications,
-              titulo: "Notificaciones",
-              subtitulo: "Configura las notificaciones de la app",
-            ),
-            _opcionConfiguracion(
-              icono: Icons.book,
-              titulo: "Manuales",
-              subtitulo: "Ver manuales de la aplicación",
-              onTap: () {
-                _mostrarDialogoManuales(context);
-              },
-            ),
-          ],
+              const SizedBox(height: 20),
+              _OpcionSwitch(
+                icono: Icons.notifications,
+                titulo: "Notificaciones",
+                subtitulo: "Configura las notificaciones de la app",
+              ),
+              const SizedBox(height: 10),
+              _opcionConfiguracion(
+                icono: Icons.book,
+                titulo: "Manuales",
+                subtitulo: "Ver manuales de la aplicación",
+                onTap: () {
+                  _mostrarDialogoManuales(context);
+                },
+              ),
+              const SizedBox(height: 10),
+              _opcionConfiguracion(
+                icono: Icons.brightness_6,
+                titulo: "Modo Oscuro",
+                subtitulo: _isDarkMode ? "Activado" : "Desactivado",
+                onTap: () {
+                  setState(() {
+                    _isDarkMode = !_isDarkMode;
+                    _saveThemePreference(_isDarkMode);
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              // Agregar Switch para el modo oscuro
+              SwitchListTile(
+                title: const Text('Modo Oscuro'),
+                value: _isDarkMode,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isDarkMode = value;
+                    _saveThemePreference(_isDarkMode);
+                  });
+                },
+                activeColor: const Color.fromARGB(
+                  197,
+                  228,
+                  149,
+                  74,
+                ), // Color del switch activo
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -59,12 +120,19 @@ class AjustesScreen extends StatelessWidget {
     required String subtitulo,
     VoidCallback? onTap,
   }) {
-    return ListTile(
-      leading: Icon(icono, color: Colors.green),
-      title: Text(titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitulo),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: onTap,
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: Icon(icono, color: Color.fromARGB(197, 228, 149, 74)),
+        title: Text(
+          titulo,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(subtitulo),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: onTap,
+      ),
     );
   }
 
@@ -148,7 +216,6 @@ class AjustesScreen extends StatelessWidget {
       final String filePath = '${tempDir.path}/${assetPath.split('/').last}';
       final File file = File(filePath);
 
-      // Siempre cargar el archivo, sin importar si existe o no
       final ByteData data = await rootBundle.load(assetPath);
       final Uint8List bytes = data.buffer.asUint8List();
       await file.writeAsBytes(bytes, flush: true);
@@ -203,20 +270,33 @@ class _OpcionSwitchState extends State<_OpcionSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(widget.icono, color: Colors.green),
-      title: Text(
-        widget.titulo,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(widget.subtitulo),
-      trailing: Switch(
-        value: _switchValue,
-        onChanged: (value) {
-          setState(() {
-            _switchValue = value;
-          });
-        },
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: Icon(
+          widget.icono,
+          color: const Color.fromARGB(197, 228, 149, 74), // Color unificado
+        ),
+        title: Text(
+          widget.titulo,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(widget.subtitulo),
+        trailing: Switch(
+          value: _switchValue,
+          activeColor: const Color.fromARGB(
+            197,
+            228,
+            149,
+            74,
+          ), // Color del switch activo
+          onChanged: (value) {
+            setState(() {
+              _switchValue = value;
+            });
+          },
+        ),
       ),
     );
   }
